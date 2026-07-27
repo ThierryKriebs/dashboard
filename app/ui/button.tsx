@@ -3,10 +3,20 @@ import clsx from 'clsx';
 //Permet de définir la forme structure d'un objet
 // hérite d'une autre interface (extends)
 //HTMLButtonElement précise que ces propriétés concernent un élément HTML <button>
+/*
+React.ButtonHTMLAttributes<HTMLButtonElement> contient les propriétés standards acceptées par un bouton HTML, notamment :
+className?: string;
+disabled?: boolean;
+onClick?: React.MouseEventHandler<HTMLButtonElement>;
+type?: 'button' | 'submit' | 'reset';
+*/
 interface ButtonProps  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ReactNode;
 }
 
+/*
+...rest récupère les autres attributs comme disabled, type ou onClick
+*/
 export function Button({ children, className, ...rest }:ButtonProps) {
     return (
         <button
