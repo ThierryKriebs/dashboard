@@ -13,17 +13,23 @@ export async function fetchCardData() {
         // si la ligne en cours à un status à paid, alors on exécute le SUM sur la colonne amount
         // si la ligne en cours à un status à pending, alors on exécute le SUM sur la colonne amount
 
-        //data => [15, 10, [paid: 118516, pending: 125632]]
+        //data => [count: 15, count: 10, [paid: 118516, pending: 125632]]
         const data = await Promise.all([
             invoiceCountPromise,
             customerCountPromise,
             invoicesStatusPromise,
         ]);
 
-        const totalPaidInvoices = formatCurrency(data[2].rows[0].paid);
+        const totalPaidInvoices = formatCurrency(data[2].rows[0].paid ?? '0');
+        const totalPendingInvoices = formatCurrency(data[2].rows[0].pending ?? '0');
+        const numberOfInvoices = Number(data[0].rows[0].count ?? '0');
+        const numberOfCustomers = Number(data[1].rows[0].count ?? '0');
 
         return {
-            totalPaidInvoices
+            totalPaidInvoices,
+            totalPendingInvoices,
+            numberOfInvoices,
+            numberOfCustomers
         }
 
     } catch (error) {
