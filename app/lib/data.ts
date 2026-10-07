@@ -1,5 +1,18 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils'; // permet le formatage en dollar américaine des montants en centimes
+import { Revenue } from './definitions';
+
+export async function fetchRevenue() {
+    try {
+
+        const data = await sql<Revenue>`SELECT * FROM revenue`;
+        return data.rows;
+
+    } catch(error) {
+        console.error('database Error:', error);
+        throw new Error('Echec lors de la récupération des données de revenus');
+    }
+}
 
 export async function fetchCardData() {
     try {

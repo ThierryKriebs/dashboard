@@ -1,9 +1,13 @@
 
 import { Card } from '@/app/ui/dashboard/cards';
 import { lusitana } from "@/app/ui/fonts";
-import { fetchCardData } from '@/app/lib/data';
+import { fetchCardData, fetchRevenue } from '@/app/lib/data';
+import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 
 export default async function Page() {
+    
+    const revenue = await fetchRevenue();
+
     const { totalPaidInvoices, totalPendingInvoices, numberOfInvoices, numberOfCustomers } = await fetchCardData();
 
     return (
@@ -17,6 +21,10 @@ export default async function Page() {
                 <Card title='Total facture(s)' value={numberOfInvoices} type='invoices' />
                 <Card title='Total client(s)' value={numberOfCustomers} type='customers' />
             </div>
+            <div className='mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8'>
+                <RevenueChart revenue={revenue} />
+            </div>
+
        </main>
     );
 }
