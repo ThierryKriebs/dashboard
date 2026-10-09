@@ -2,7 +2,11 @@ import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils'; // permet le formatage en dollar américaine des montants en centimes
 import { Revenue, LatestInvoiceRaw } from './definitions';
 
+import { unstable_noStore as noStore } from 'next/cache'; // Pour faire du rendu dynamique de manière granuaire (composant par composant)
+
+
 export async function fetchRevenue() {
+    noStore();  // Evite que la réponse soit mis en cache
     try {
 
         const data = await sql<Revenue>`SELECT * FROM revenue`;
@@ -15,6 +19,8 @@ export async function fetchRevenue() {
 }
 
 export async function fetchLatestInvoices() {
+    noStore();
+
     try {
         const data = await sql<LatestInvoiceRaw>`
         SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id 
@@ -37,6 +43,7 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+    noStore();
     try {
         const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
         const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
