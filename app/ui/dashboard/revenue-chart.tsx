@@ -2,8 +2,13 @@ import { Revenue } from '@/app/lib/definitions';
 import { generateYAxis } from '@/app/lib/utils';
 import { lusitana } from '@/app/ui/fonts';
 import { CalendarIcon } from '@heroicons/react/24/outline';
+import { fetchRevenue } from '@/app/lib/data';
 
-export default async function RevenueChart({ revenue } : { revenue: Revenue[] }) {
+// export default async function RevenueChart({ revenue } : { revenue: Revenue[] }) {  // avant il y avait une prop revenue transmise par le composant parent
+export default async function RevenueChart() { // Maintenant le composant va lui-même chercher ses données
+
+    const revenue = await fetchRevenue(); // le composant va chercher lui-même ses données
+   
     const chartHeight = 350;
     const topLabel = generateYAxis(revenue);
 
