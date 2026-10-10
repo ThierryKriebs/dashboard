@@ -3,8 +3,12 @@ import { lusitana } from '@/app/ui/fonts';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import { fetchLatestInvoices } from '@/app/lib/data';  // maintenant les données fetchRevenue ne sont plus récupérées dans le composant parent
 
-export default async function LatestInvoices( { latestInvoices } : { latestInvoices: LatestInvoice[] }) {
+// export default async function LatestInvoices( { latestInvoices } : { latestInvoices: LatestInvoice[] }) {
+export default async function LatestInvoices( ) {
+    const latestInvoices = await fetchLatestInvoices();
+
     return (
         <div className='flex w-full flex-col md:col-span-4'>
             <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>

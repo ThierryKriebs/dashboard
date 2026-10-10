@@ -3,18 +3,18 @@ import { Card } from '@/app/ui/dashboard/cards';
 import { lusitana } from "@/app/ui/fonts";
 
 //import { fetchCardData, fetchRevenue, fetchLatestInvoices } from '@/app/lib/data'; // avant
-import { fetchCardData, fetchLatestInvoices } from '@/app/lib/data';  // maintenant les données fetchRevenue ne sont plus récupérées dans le composant parent
+import { fetchCardData } from '@/app/lib/data';  // maintenant les données fetchRevenue ne sont plus récupérées dans le composant parent
 
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 
 import { Suspense } from 'react';
-import { RevenueChartSkeleton } from '@/app/ui/skeletons';
+import { RevenueChartSkeleton, LatestInvoicesSkeleton } from '@/app/ui/skeletons';
 
 export default async function Page() {
     
     // const revenue = await fetchRevenue(); // maintenant les données fetchRevenue ne sont plus récupérées dans le composant parent
-    const latestInvoices = await fetchLatestInvoices();
+    //const latestInvoices = await fetchLatestInvoices();
 
     const { totalPaidInvoices, totalPendingInvoices, numberOfInvoices, numberOfCustomers } = await fetchCardData();
 
@@ -34,7 +34,11 @@ export default async function Page() {
                 <Suspense fallback={<RevenueChartSkeleton />}>
                     <RevenueChart /> {/* les données de revenus ne sont plus récupérées par le composant parent, mais par le composant */}
                 </Suspense>
-                <LatestInvoices latestInvoices={latestInvoices} />
+               
+               
+               <Suspense fallback={<LatestInvoicesSkeleton />}>
+                    <LatestInvoices />
+                </Suspense>
             </div>
 
        </main>
