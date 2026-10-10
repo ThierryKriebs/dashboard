@@ -8,8 +8,13 @@ import { unstable_noStore as noStore } from 'next/cache'; // Pour faire du rendu
 export async function fetchRevenue() {
     noStore();  // Evite que la réponse soit mis en cache
     try {
-
+        console.log('Récupération des données de revenus...');
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // la fonction en paramètre appelle resolve après 3 secondes
+                                                                   // C'est l'appel à resolve  qui va résoudre la promesse
+                                                                   // resolve est appelé après 3s. C'est cet appel qui résout la promesse
         const data = await sql<Revenue>`SELECT * FROM revenue`;
+        console.log('La récupération des données s\'est terminée après 3 secondes.');
+
         return data.rows;
 
     } catch(error) {
