@@ -1,22 +1,23 @@
 
-import { Card } from '@/app/ui/dashboard/cards';
+// import { Card } from '@/app/ui/dashboard/cards';
 import { lusitana } from "@/app/ui/fonts";
 
 //import { fetchCardData, fetchRevenue, fetchLatestInvoices } from '@/app/lib/data'; // avant
-import { fetchCardData } from '@/app/lib/data';  // maintenant les données fetchRevenue ne sont plus récupérées dans le composant parent
+// import { fetchCardData } from '@/app/lib/data';  // maintenant les données ne sont plus récupérées dans le composant parent
 
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 
 import { Suspense } from 'react';
-import { RevenueChartSkeleton, LatestInvoicesSkeleton } from '@/app/ui/skeletons';
+import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
+import CardWrapper from "../ui/dashboard/cards";
 
 export default async function Page() {
     
     // const revenue = await fetchRevenue(); // maintenant les données fetchRevenue ne sont plus récupérées dans le composant parent
     //const latestInvoices = await fetchLatestInvoices();
 
-    const { totalPaidInvoices, totalPendingInvoices, numberOfInvoices, numberOfCustomers } = await fetchCardData();
+    // const { totalPaidInvoices, totalPendingInvoices, numberOfInvoices, numberOfCustomers } = await fetchCardData();
 
     return (
        <main>
@@ -24,10 +25,15 @@ export default async function Page() {
                 Tableau de bord
             </h1>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                <Card title='Collecté' value={totalPaidInvoices} type='collected' />
+                {/* <Card title='Collecté' value={totalPaidInvoices} type='collected' />
                 <Card title='En attente' value={totalPendingInvoices} type='pending' />
                 <Card title='Total facture(s)' value={numberOfInvoices} type='invoices' />
-                <Card title='Total client(s)' value={numberOfCustomers} type='customers' />
+                <Card title='Total client(s)' value={numberOfCustomers} type='customers' /> */}
+                {/* WRAPPER de cards */}
+                <Suspense fallback= { <CardsSkeleton />} >
+                    < CardWrapper />
+                </Suspense>
+
             </div>
             <div className='mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8'>
                 {/* <RevenueChart revenue={revenue} /> */}

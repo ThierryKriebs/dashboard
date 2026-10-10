@@ -2,6 +2,7 @@
 const shimmer = //shimmer permet de créer une petite animation
   'before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent';
 
+
 export function CardSkeleton() {
   return (
     <div
@@ -16,6 +17,17 @@ export function CardSkeleton() {
       </div>
     </div>
   );
+}
+
+export function CardsSkeleton() {
+  return (
+    <>
+      < CardSkeleton />
+      < CardSkeleton />
+      < CardSkeleton />
+      < CardSkeleton />
+    </>
+  )
 }
 
 export function RevenueChartSkeleton() {
