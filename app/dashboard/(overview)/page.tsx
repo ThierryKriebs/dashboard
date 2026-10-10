@@ -10,7 +10,7 @@ import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 
 import { Suspense } from 'react';
 import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
-import CardWrapper from "../ui/dashboard/cards";
+import CardWrapper from "@/app/ui/dashboard/cards"; 
 
 export default async function Page() {
     
