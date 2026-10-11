@@ -2,6 +2,7 @@
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSearchParams, usePathname, useRouter } from "next/navigation"; // Récupération des paramètres d'URL
+import { useDebouncedCallback } from 'use-debounce'; // Permet d'attendre lors de la survenue d'un évènement (ex: frappe au clavier)
 
 export default function Search( { placeholder } : {placeholder :string}) {
    
@@ -9,8 +10,10 @@ export default function Search( { placeholder } : {placeholder :string}) {
     const {replace} = useRouter(); // Permet de changer d'URL sans garder d'historique de chaque modification (saisie utilisateur en cours)
     const pathname = usePathname(); //renvoi /dashboard/invoices
 
-    // Si l'utilisateur clic sur le bouton Recherche => Modification de l'URL sans changer la page
-    function handleSearch(term: string) {
+    // Attend 300 ms avant d'exécuter le code à l'intérieur (évite trop d'appels serveurs et donc trop de solicitation de la BDD)
+    // Si le même évènement survient avant les 300ms (nouvelle frappe clavier), les 300ms sont réinitialisés
+    const handleSearch = useDebouncedCallback ( (term) => {
+        console.log(`Recherche... ${term}`);
         const params = new URLSearchParams(searchParams);   // Copie modifiable des paramètres actuels (le hook est en lecture seule).
                                                             // prépare la prochaine URL"   → new URLSearchParams(searchParams) (brouillon)
                                                             // clone modifiable de l'état actuel de l'URL
@@ -25,7 +28,25 @@ export default function Search( { placeholder } : {placeholder :string}) {
         // Création d'une nouvelle URL qui contiendra la valeur demandée par l'utilisateur (l'URL est modifiée en direct!)
         // L'URL sera mise à jour sans le rechargement de la page (grâce à NextJS clientSide navigation)
         replace(`${pathname}?${params.toString()}`);
-    }
+    }, 300)
+
+    // OLD handleSearch sans l'attente. Si l'utilisateur clic sur le bouton Recherche => Modification de l'URL sans changer la page
+    // function handleSearch(term: string) {
+    //     const params = new URLSearchParams(searchParams);   // Copie modifiable des paramètres actuels (le hook est en lecture seule).
+    //                                                         // prépare la prochaine URL"   → new URLSearchParams(searchParams) (brouillon)
+    //                                                         // clone modifiable de l'état actuel de l'URL
+    //     if (term) {
+    //         params.set('query', term)  // prépare un paramètre query qui contiendra la valeur saisie par l'utilisateur
+    //     } else {
+    //         params.delete('query')  // dans le cas où l'utilisateur a saisie une information puis la supprimée. 
+    //                                 // On supprime alors le paramètre qu'on a créé précédemment, afin de ne pas en créer un qui ne contient rien
+    //                                 // Évite les états fantômes. Si query= dans l'URL, un composant qui vérifie if (params.has('query')) croira à tort qu'une recherche est active.
+    //     }
+
+    //     // Création d'une nouvelle URL qui contiendra la valeur demandée par l'utilisateur (l'URL est modifiée en direct!)
+    //     // L'URL sera mise à jour sans le rechargement de la page (grâce à NextJS clientSide navigation)
+    //     replace(`${pathname}?${params.toString()}`);
+    // }
    
     return (
         <div className="relative flex flex-1 flex-shrink-0">
