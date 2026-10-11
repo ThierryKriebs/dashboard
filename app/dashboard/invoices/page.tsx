@@ -4,8 +4,9 @@ import { Createinvoice } from "@/app/ui/invoices/buttons";
 import Table from '@/app/ui/invoices/table'; // export par défaut on peut donc le nommer comme on veut
 import { Suspense } from "react";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
+import { fetchInvoicesPages } from "@/app/lib/data";
 
-export default function Page({
+export default async function Page({
     searchParams,
 }: {
     searchParams?: {            //Cette page peut (à cause du champ recherche) être appelée avec des paramètres d'url
@@ -16,6 +17,9 @@ export default function Page({
 
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;
+
+    const totalPages = await fetchInvoicesPages(query);
+    console.log(totalPages);
 
     return (
         <div className="w-full">

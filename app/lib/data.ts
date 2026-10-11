@@ -130,5 +130,27 @@ export async function fetchFilteredInvoices(
         console.error('Database Error', error);
         throw new Error('Echec lors de la récupération des factures');
     }
+}
 
+export async function fetchInvoicesPages(query: string) {
+    noStore(); // on veut un composant dynamique
+     try {
+        // sql créé des requêtes paramétrées! chaque ${...} devient un placeholder ($1, $2…)
+        const count = await sql `SELECT COUNT(*)
+        FROM invoices
+        JOIN customers ON invoices.customer_id = customers.id
+        WHERE
+            customers.name ILIKE ${`%${query}%`} OR
+            customers.email ILIKE ${`%${query}%`} OR
+            invoices.amount::text ILIKE ${`%${query}%`} OR
+            invoices.date::text ILIKE ${`%${query}%`} OR
+            invoices.status ILIKE ${`%${query}%`}
+        `;
+        const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+        return totalPages;
+    } 
+    catch (error) {
+        console.error('Database Error', error);
+        throw new Error('Echec lors de la récupération du total de factures');
+    }
 }

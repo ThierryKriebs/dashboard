@@ -17,6 +17,8 @@ export default function Search( { placeholder } : {placeholder :string}) {
         const params = new URLSearchParams(searchParams);   // Copie modifiable des paramètres actuels (le hook est en lecture seule).
                                                             // prépare la prochaine URL"   → new URLSearchParams(searchParams) (brouillon)
                                                             // clone modifiable de l'état actuel de l'URL
+        params.set('page', '1');
+        
         if (term) {
             params.set('query', term)  // prépare un paramètre query qui contiendra la valeur saisie par l'utilisateur
         } else {
