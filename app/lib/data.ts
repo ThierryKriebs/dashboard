@@ -99,6 +99,8 @@ export async function fetchFilteredInvoices(
     const offset = (currentPage -1) * ITEMS_PER_PAGE;
 
     try {
+        // sql créé des requêtes paramétrées! chaque ${...} devient un placeholder ($1, $2…)
+        //Attention: Les caractères joker % ne sont pas échappés — => il faudrait les échapper: const sanitized = query.replace(/[%_\\]/g, '\\$&');
         const invoices = await sql<InvoicesTable>`
        
         SELECT
