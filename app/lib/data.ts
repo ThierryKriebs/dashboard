@@ -1,6 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils'; // permet le formatage en dollar américaine des montants en centimes
-import { Revenue, LatestInvoiceRaw } from './definitions';
+import { Revenue, LatestInvoiceRaw, InvoicesTable } from './definitions';
 
 import { unstable_noStore as noStore } from 'next/cache'; // Pour faire du rendu dynamique de manière granuaire (composant par composant)
 
@@ -88,4 +88,45 @@ export async function fetchCardData() {
         console.error('Database Error', error);
         throw new Error('Echec lors de la récupération des données de Card');
     }
+}
+
+const ITEMS_PER_PAGE = 6;
+export async function fetchFilteredInvoices(
+    query: string,
+    currentPage: number
+) {
+    noStore(); // On impose un rendu dynamique au composant
+    const offset = (currentPage -1) * ITEMS_PER_PAGE;
+
+    try {
+        const invoices = await sql<InvoicesTable>`
+       
+        SELECT
+            invoices.id,
+            invoices.amount,
+            invoices.date,
+            invoices.status,
+            customers.name,
+            customers.email,
+            customers.image_url
+        FROM invoices
+        JOIN customers ON invoices.customer_id = customers.id
+        WHERE
+            customers.name ILIKE ${`%${query}%`} OR
+            customers.email ILIKE ${`%${query}%`} OR
+            invoices.amount::text ILIKE ${`%${query}%`} OR
+            invoices.date::text ILIKE ${`%${query}%`} OR
+            invoices.status ILIKE ${`%${query}%`}
+        ORDER BY invoices.date DESC
+        LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+        `;
+        return invoices.rows;
+               
+
+    } 
+    catch (error) {
+        console.error('Database Error', error);
+        throw new Error('Echec lors de la récupération des factures');
+    }
+
 }

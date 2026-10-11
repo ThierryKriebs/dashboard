@@ -6,10 +6,10 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation"; // R�
 export default function Search( { placeholder } : {placeholder :string}) {
    
     const searchParams = useSearchParams(); // Récupération des paramètres d'URL en lecture seule => Source de vérité
-    const {replace} = useRouter(); // Permet de changer d'URL sans garder d'historique de chaque modification
+    const {replace} = useRouter(); // Permet de changer d'URL sans garder d'historique de chaque modification (saisie utilisateur en cours)
     const pathname = usePathname(); //renvoi /dashboard/invoices
 
-
+    // Si l'utilisateur clic sur le bouton Recherche => Modification de l'URL sans changer la page
     function handleSearch(term: string) {
         const params = new URLSearchParams(searchParams);   // Copie modifiable des paramètres actuels (le hook est en lecture seule).
                                                             // prépare la prochaine URL"   → new URLSearchParams(searchParams) (brouillon)

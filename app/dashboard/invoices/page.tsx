@@ -1,9 +1,22 @@
 import { lusitana } from "@/app/ui/fonts"
 import Search from "@/app/ui/search";
 import { Createinvoice } from "@/app/ui/invoices/buttons";
+import Table from '@/app/ui/invoices/table'; // export par défaut on peut donc le nommer comme on veut
+import { Suspense } from "react";
+import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 
+export default function Page({
+    searchParams,
+}: {
+    searchParams?: {            //Cette page peut (à cause du champ recherche) être appelée avec des paramètres d'url
+        query?: string;
+        page?: string;
+    }
+}) {
 
-export default function Page() {
+    const query = searchParams?.query || '';
+    const currentPage = Number(searchParams?.page) || 1;
+
     return (
         <div className="w-full">
             <div className="flex w-full items-center justify-beween">
@@ -13,6 +26,9 @@ export default function Page() {
                 <Search placeholder="Recherche des factures" />
                 <Createinvoice />
             </div>
+            <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+                < Table query={query} currentPage={currentPage}/>
+            </Suspense>
 
         </div>
        
