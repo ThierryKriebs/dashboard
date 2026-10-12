@@ -41,25 +41,27 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
                                                                  // i => index (0, 1, 2... jusqu'à totalPages)
                                                                  // résultat = index + 1
     
-        // [1][2][3][...][5][6]
-        if (currentPage <= 3) { // Si la page courante est dans les 3 premières
-            return [1, 2, 3, '...', totalPages - 1, totalPages];
-        }
-
-        // [1][2][...][4][5][6]
-        if (currentPage >= totalPages -2) { // Si la page courante est dans les 3 dernières
-            return [1, 2, '...', totalPages - 2, totalPages - 1, totalPages];
-        }
-
-        // [1][...][voisine -1][page actuelle][voisine + 1][...][6]
-        return [
-            1,
-            '...', 
-            currentPage - 1,
-            currentPage,
-            currentPage + 1,
-            '...',
-            totalPages
-        ];
     }
+    
+    // [1][2][3][...][5][6]
+    if (currentPage <= 3) { // Si la page courante est dans les 3 premières
+        return [1, 2, 3, '...', totalPages - 1, totalPages];
+    }
+
+    // [1][2][...][4][5][6]
+    if (currentPage >= totalPages -2) { // Si la page courante est dans les 3 dernières
+        return [1, 2, '...', totalPages - 2, totalPages - 1, totalPages];
+    }
+
+    // [1][...][voisine -1][page actuelle][voisine + 1][...][6]
+    return [
+        1,
+        '...', 
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        '...',
+        totalPages
+    ];
+    
 }
