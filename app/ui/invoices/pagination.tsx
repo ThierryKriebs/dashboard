@@ -1,9 +1,10 @@
 'use client';
 
-import { useSearchParams, usePathname } from "next/navigation"; //recherche des paramètres dans la barre de recherche
 import { generatePagination } from '@/app/lib/utils';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { useSearchParams, usePathname } from "next/navigation"; //recherche des paramètres dans la barre de recherche
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 
 export default function Pagination({totalPages}: { totalPages: number}) {
     
@@ -20,33 +21,43 @@ export default function Pagination({totalPages}: { totalPages: number}) {
     }
 
 
-    const allPages = generatePagination(currentPage, totalPages); // renvoie un tableau avec l'ensemble des pnuméros de page pour la pagination
+    const allPages = generatePagination(currentPage, totalPages); // renvoie un tableau avec l'ensemble des numéros de page pour la pagination
    
     return (
         <>
-            <div className='flex -space-x-px'>
-                {
-                    allPages.map((page, index) => {
-                        
-                        let position: 'first' | 'last' | 'single' | 'middle' | undefined;
-                        if (index === 0) position = 'first';
-                        if (index === allPages.length -1) position = 'last';
-                        if (allPages.length === 1) position = 'single';
-                        if (page === '...') position = 'middle';
-                        
-                        
-                        return (
-                            <PaginationNumber 
-                                key={page} 
-                                page={page}
-                                href={createPageURL(page)}
-                                isActive={currentPage === page}
-                                position={position}
-
-                            />
-                        )
-                    })
-                }
+            <div className='inline-flex'>
+                <PaginationArrow 
+                    href={createPageURL(currentPage - 1)}
+                    direction="left"
+                    isDisabled={currentPage <= 1}
+                />
+                <div className='flex -space-x-px'>
+                    {
+                        allPages.map((page, index) => {
+                            
+                            let position: 'first' | 'last' | 'single' | 'middle' | undefined;
+                            if (index === 0) position = 'first';
+                            if (index === allPages.length -1) position = 'last';
+                            if (allPages.length === 1) position = 'single';
+                            if (page === '...') position = 'middle';
+                            
+                            return (
+                                <PaginationNumber 
+                                    key={page} 
+                                    page={page}
+                                    href={createPageURL(page)}
+                                    isActive={currentPage === page}
+                                    position={position}
+                                />
+                            )
+                        })
+                    }
+                </div>
+                <PaginationArrow 
+                    href={createPageURL(currentPage + 1)}
+                    direction="right"
+                    isDisabled={currentPage >= totalPages}
+                />
             </div>
         </>
     )
@@ -91,5 +102,43 @@ function PaginationNumber({
             { page }
         </Link>
     )
+}
 
+// Création d'un bouton <- ou -> (Page suivante ou Page précédente)
+function PaginationArrow({
+    href,
+    direction,
+    isDisabled
+}: {
+    href: string;
+    direction: 'left' | 'right';
+    isDisabled?: boolean;
+}){
+
+    const className = clsx(
+        'flex h-10 w-10 items-center justify-center rounded-md border',
+        {
+            'pointer-events-none text-gray-300': isDisabled,
+            'hover:bg-gray-100': !isDisabled,
+            'mr-2 md:mr-4': direction === 'left', //si direction vaut left alors à partir du breakpoint md (768px) margin-right: 1rem, en-dessous margin-right: 0.5rem
+            'ml-2 md:ml-4': direction === 'right'
+        }
+    )
+
+    const icon = direction === 'left' ? (
+        <ArrowLeftIcon className='w-4' />
+    ) : (
+        <ArrowRightIcon className='w-4' />
+    );
+
+    return isDisabled ? (
+        <div className={className}>{icon}</div>
+    ) : (
+        <Link
+            className = {className}
+            href={href}
+        >
+            {icon}
+        </Link>
+    );
 }
