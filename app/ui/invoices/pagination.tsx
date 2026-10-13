@@ -72,7 +72,7 @@ function PaginationNumber({
 }: {
     page: number | string;
     href: string;
-    isActive: Boolean;
+    isActive: boolean;
     position?: 'first' | 'last' | 'middle' | 'single';
 
 }) {
