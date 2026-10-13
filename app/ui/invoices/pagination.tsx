@@ -118,7 +118,7 @@ function PaginationArrow({
     const className = clsx(
         'flex h-10 w-10 items-center justify-center rounded-md border',
         {
-            'pointer-events-none text-gray-300': isDisabled,
+            'pointer-events-none text-gray-300': isDisabled, 
             'hover:bg-gray-100': !isDisabled,
             'mr-2 md:mr-4': direction === 'left', //si direction vaut left alors à partir du breakpoint md (768px) margin-right: 1rem, en-dessous margin-right: 0.5rem
             'ml-2 md:ml-4': direction === 'right'
