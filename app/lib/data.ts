@@ -1,6 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils'; // permet le formatage en dollar américaine des montants en centimes
-import { Revenue, LatestInvoiceRaw, InvoicesTable } from './definitions';
+import { Revenue, LatestInvoiceRaw, InvoicesTable, CustomerField } from './definitions';
 
 import { unstable_noStore as noStore } from 'next/cache'; // Pour faire du rendu dynamique de manière granuaire (composant par composant)
 
@@ -152,5 +152,26 @@ export async function fetchInvoicesPages(query: string) {
     catch (error) {
         console.error('Database Error', error);
         throw new Error('Echec lors de la récupération du total de factures');
+    }
+}
+
+
+export async function fetchCustomers() {
+    noStore()
+
+    try {
+        const data = await sql<CustomerField>`
+        SELECT 
+            id,
+            name
+            FROM customers
+            ORDER BY name ASC
+        `;
+
+        const customers = data.rows;
+        return customers;
+    } catch(error) {
+        console.error('Database Error', error);
+        throw new Error('Echec lors de la récupération des clients');
     }
 }
