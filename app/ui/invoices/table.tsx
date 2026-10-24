@@ -2,6 +2,7 @@
 import { fetchFilteredInvoices } from '@/app/lib/data'
 import { formatCurrency, formatDateToLocal } from '@/app/lib/utils';
 import Image from 'next/image';
+import InvoiceStatus from './status';
 
 export default async function InvoiceTable({
     query,
@@ -41,6 +42,7 @@ export default async function InvoiceTable({
                                         </div>
                                         <p className="text-sm text-gray-500">{/* Email du client */} ${invoice.email}</p>
                                         </div>
+                                        <InvoiceStatus status={invoice.status} />
                                     </div>
                                     <div className="flex w-full items-center justify-between pt-4">
                                         <div>
@@ -63,6 +65,7 @@ export default async function InvoiceTable({
                             <th scope="col" className="px-3 py-5 font-medium">Email</th>
                             <th scope="col" className="px-3 py-5 font-medium">Montant</th>
                             <th scope="col" className="px-3 py-5 font-medium">Date</th>
+                            <th scope="col" className="px-3 py-5 font-medium">Etat</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white">
@@ -95,6 +98,9 @@ export default async function InvoiceTable({
                                         <td className="whitespace-nowrap px-3 py-3">
                                             {/* Date d'achat - Utiliser la fonction formatDateToLocal() */}
                                             {formatDateToLocal(invoice.date)}
+                                        </td>
+                                        <td className="whitespace-nowrap px-3 py-3">
+                                            <InvoiceStatus status={invoice.status} />
                                         </td>
                                     </tr>
                                 ))}
