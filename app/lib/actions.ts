@@ -68,3 +68,10 @@ export async function updateInvoice(id: string, formData: FormData) {
     // Redirection après enregistrement en BDD 
     redirect('/dashboard/invoices');
 }
+
+export async function deleteInvoice(id:string) {
+    await sql`DELETE FROM invoices WHERE id = ${id}`;
+
+    // Revalider le path (vide le cache de route côté client et le mettre à jour) On verra ainsi les modifs de la facture apparaître sur la page
+    revalidatePath('/dashboard/invoices');
+}
