@@ -187,7 +187,14 @@ export async function fetchInvoiceById(id: string) {
                 invoices.status
             FROM invoices
             WHERE invoices.id = ${id};
-        `; //5 min
+        `;
+
+        const invoice = data.rows.map((invoice) => ({
+            ...invoice,
+            amount: invoice.amount / 100,
+        }));
+
+        return invoice[0];
 
     } catch (error) {
         console.error('Database Error', error);
