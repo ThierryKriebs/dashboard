@@ -7,6 +7,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { CustomerField, InvoiceForm } from "@/app/lib/definitions";
+import { updateInvoice } from '@/app/lib/actions';
 
 
 export default function Form({ 
@@ -16,8 +17,13 @@ export default function Form({
     customers: CustomerField[] 
     invoice: InvoiceForm
 }) {
+
+    const updateInvoiceWithId = updateInvoice.bind(null, invoice.id)
+
+
     return (
-        <form>
+        <form action={updateInvoiceWithId}>
+            {/* Dans un form, il est interdit de passer des arguments à des formulaires!  besoin de faire un bind!*/}
             <div className="rounded-md bg-gray-50 p-4 md:p-6">
                 {/* Nom du client */}
                 <div className="mb-4">
