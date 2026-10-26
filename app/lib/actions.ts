@@ -25,15 +25,17 @@ export async function createInvoice(formData: FormData) {
     const amountInCents = amount * 100;
     const date = new Date().toISOString().split('T')[0] ;
 
-    // Enregistrer la facture en BDD
-    await sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-    `;
+    try {
+        // Enregistrer la facture en BDD
+        await sql`
+            INSERT INTO invoices (customer_id, amount, status, date)
+            VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+        `;
 
-    // Gestion des erreurs => plus tard
-
-
+    }catch (error) {
+        return { message: 'Erreur base de données: échec lors de la création de la facture.'}
+    }
+   
     // Revalider le path (vide le cache de route côté client et le mettre à jour) On verra ainsi la nouvelle facture apparaître sur la page
     revalidatePath('/dashboard/invoices');
 
@@ -52,15 +54,18 @@ export async function updateInvoice(id: string, formData: FormData) {
     const amountInCents = amount * 100;
     const date = new Date().toISOString().split('T')[0] ;
 
-    // Modifier la facture en BDD avec un ID spécifique
-    await sql`
-        UPDATE invoices
-        SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-        WHERE id = ${id}
-    `;
+    try {
+        // Modifier la facture en BDD avec un ID spécifique
+        await sql`
+            UPDATE invoices
+            SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+            WHERE id = ${id}
+        `;
 
-    // Gestion des erreurs => plus tard
-
+    } catch (error) {
+        return { message: 'Erreur base de données: échec lors de la mise à jour de la facture.'}
+    }
+    
 
     // Revalider le path (vide le cache de route côté client et le mettre à jour) On verra ainsi les modifs de la facture apparaître sur la page
     revalidatePath('/dashboard/invoices');
@@ -70,8 +75,16 @@ export async function updateInvoice(id: string, formData: FormData) {
 }
 
 export async function deleteInvoice(id:string) {
-    await sql`DELETE FROM invoices WHERE id = ${id}`;
+    
+    // throw new Error("Echec de la suppression de la facture");
+    try {
+        await sql`DELETE FROM invoices WHERE id = ${id}`;
 
-    // Revalider le path (vide le cache de route côté client et le mettre à jour) On verra ainsi les modifs de la facture apparaître sur la page
-    revalidatePath('/dashboard/invoices');
+        // Revalider le path (vide le cache de route côté client et le mettre à jour) On verra ainsi les modifs de la facture apparaître sur la page
+        revalidatePath('/dashboard/invoices');
+
+    } catch (error) {
+        return { message: 'Erreur base de données: échec lors de la suppression de la facture.'}
+    }
+    
 }
