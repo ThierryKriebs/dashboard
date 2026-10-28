@@ -1,3 +1,5 @@
+'use client'
+
 import { 
     UserCircleIcon, 
     CurrencyDollarIcon,
@@ -8,6 +10,7 @@ import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { CustomerField, InvoiceForm } from "@/app/lib/definitions";
 import { updateInvoice } from '@/app/lib/actions';
+import { useFormState } from 'react-dom';
 
 
 export default function Form({ 
@@ -18,11 +21,16 @@ export default function Form({
     invoice: InvoiceForm
 }) {
 
+    const initialState = {
+        message: null,
+        errors: {}
+    }
     const updateInvoiceWithId = updateInvoice.bind(null, invoice.id)
+    const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
 
 
     return (
-        <form action={updateInvoiceWithId}>
+        <form action={dispatch}>
             {/* Dans un form, il est interdit de passer des arguments à des formulaires!  besoin de faire un bind!*/}
             <div className="rounded-md bg-gray-50 p-4 md:p-6">
                 {/* Nom du client */}
@@ -36,6 +44,7 @@ export default function Form({
                             name="customerId"
                             className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                             defaultValue={invoice.customer_id}
+                            aria-describedby='customer-error'
                         >
                             <option value="" disabled>
                                 Choisir un client
@@ -51,6 +60,14 @@ export default function Form({
                             
                         </select>
                         <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+                    </div>
+                    <div id="customer-error" aria-live='polite' aria-atomic="true">
+                            {state.errors?.customerId &&
+                            state.errors.customerId.map((error: string) => (
+                                <p className='mt-2 text-sm text-red-500' key={error}>
+                                    { error }
+                                </p>
+                            ))}
                     </div>
                 </div>
 
@@ -69,9 +86,18 @@ export default function Form({
                                 step="0.01"
                                 placeholder="Entrez un montant en USD"
                                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                aria-describedby='amout-error'
                             />
                             <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
                         </div>
+                    </div>
+                    <div id="amout-error" aria-live='polite' aria-atomic="true">
+                            {state.errors?.amount &&
+                            state.errors.amount.map((error: string) => (
+                                <p className='mt-2 text-sm text-red-500' key={error}>
+                                    { error }
+                                </p>
+                            ))}
                     </div>
                 </div>
                 
@@ -106,6 +132,7 @@ export default function Form({
                                     value="paid"
                                     defaultChecked={invoice.status === 'paid'}
                                     className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                                    aria-describedby='status-error'
                                 />
                                 <label
                                     htmlFor="paid"
@@ -116,7 +143,20 @@ export default function Form({
                             </div>
                         </div>
                     </div>
+                    <div id="status-error" aria-live='polite' aria-atomic="true">
+                            {state.errors?.status &&
+                            state.errors.status.map((error: string) => (
+                                <p className='mt-2 text-sm text-red-500' key={error}>
+                                    { error }
+                                </p>
+                            ))}
+                    </div>
                 </fieldset>
+                <div aria-live='polite' aria-atomic="true">
+                    {state.message ? (
+                        <p className='mt-2 text-sm text-red-500'>{state.message} </p>
+                    ): null}
+                </div>
             </div>
             <div className="mt-6 flex justify-end gap-4">
                 <Link

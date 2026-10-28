@@ -49,7 +49,9 @@ export async function createInvoice(prevState: State, formData: FormData) {
     // Si la validation n'a pas fonctionné on renvoie notre propre objet erreur formate comme nous on a envie
     if (!validatedFields.success) {
         return {
-            errors: validatedFields.error.flatten().fieldErrors, // flatten transforme les données en simple dictionnaire ex: { amount: ['Veuillez entrer un montant supérieur à 0 $'] }
+            errors: validatedFields.error.flatten().fieldErrors, 
+            // flatten transforme les données en simple dictionnaire 
+            // ex: { amount: ['Veuillez entrer un montant supérieur à 0 $'] }
             message: 'Champ manquants. Echec de la création de la facture.'
         }
     }
@@ -71,7 +73,8 @@ export async function createInvoice(prevState: State, formData: FormData) {
         return { message: 'Erreur base de données: échec lors de la création de la facture.'}
     }
    
-    // Revalider le path (vide le cache de route côté client et le mettre à jour) On verra ainsi la nouvelle facture apparaître sur la page
+    // Revalider le path (vide le cache de route côté client et le mettre à jour) 
+    // On verra ainsi la nouvelle facture apparaître sur la page
     revalidatePath('/dashboard/invoices');
 
     // Redirection après enregistrement en BDD 
@@ -79,15 +82,28 @@ export async function createInvoice(prevState: State, formData: FormData) {
 }
 
 
-export async function updateInvoice(id: string, formData: FormData) {
+export async function updateInvoice(id: string, preState: State, formData: FormData) {
     
-   const {customerId, amount, status} = UpdateInvoice.parse({
+   const validatedFields = UpdateInvoice.safeParse({
         customerId: formData.get('customerId'),
         amount: formData.get('amount'),
         status: formData.get('status'),
     })
+
+    // Si la validation n'a pas fonctionné on renvoie notre propre objet erreur formate comme nous on a envie
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors, 
+            // flatten transforme les données en simple dictionnaire 
+            // ex: { amount: ['Veuillez entrer un montant supérieur à 0 $'] }
+            message: 'Champ manquants. Echec de la modification de la facture.'
+        }
+    }
+
+    const {customerId, amount, status} = validatedFields.data;
+   
     const amountInCents = amount * 100;
-    const date = new Date().toISOString().split('T')[0] ;
+    // const date = new Date().toISOString().split('T')[0] ;
 
     try {
         // Modifier la facture en BDD avec un ID spécifique
