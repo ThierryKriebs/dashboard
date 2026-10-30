@@ -6,10 +6,15 @@ import {
  
  import { ArrowRightIcon } from '@heroicons/react/20/solid';
  import {Button } from './button';
+ import { useFormState, useFormStatus } from 'react-dom'; // useFormState sert à récupérer le résultat d'une Server Action déclenchée par un formulaire
+ import { authenticate } from '@/app/lib/actions';
 
 export default function LoginForm() {
+
+    const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+
     return (
-        <form className="space-y-3">
+        <form className="space-y-3" action ={dispatch}>
             <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
                 <h1 className={`${lusitana.className} mb-3 text-2xl`}>Connexion </h1>
                 <div className="w-full">
@@ -58,8 +63,9 @@ export default function LoginForm() {
 }
 
 function LoginButton() {
+    const { pending } = useFormStatus(); // useFormStatus permet de savoir si le form est en cours d'envoi
     return(
-        <Button className='mt-4 w-full'>
+        <Button className='mt-4 w-full' aria-disabled={pending}>
            Se connecter < ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
         </Button>
     )

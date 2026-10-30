@@ -3,6 +3,9 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache'; // permet de vider le cache du navigateur client pour une route donnée
 import { redirect } from 'next/navigation';
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
+
 
 // État du formulaire retourné par une Action Serveur après soumission.
 // errors  : messages de validation par champ (string[] car un champ peut
@@ -127,7 +130,7 @@ export async function updateInvoice(id: string, preState: State, formData: FormD
 
 export async function deleteInvoice(id:string) {
     
-    throw new Error("Echec de la suppression de la facture");
+    // throw new Error("Echec de la suppression de la facture");
     try {
         await sql`DELETE FROM invoices WHERE id = ${id}`;
 
@@ -137,5 +140,25 @@ export async function deleteInvoice(id:string) {
     } catch (error) {
         return { message: 'Erreur base de données: échec lors de la suppression de la facture.'}
     }
-    
+}
+
+export async function authenticate(prevState: string | undefined, formData: FormData) {
+    try {
+        await signIn('credentials', formData);
+    } catch (error) {
+        
+        // Une erreur spécifique à l'authentification s'est produite
+        if(error instanceof AuthError) {
+            switch (error.type) {
+                case 'CredentialsSignin':
+                    return 'Identifiants invalides.';
+                default:
+                    return "Quelque chose s'est mal passé."
+            }
+
+        }
+        throw error;
+
+    }
+
 }
