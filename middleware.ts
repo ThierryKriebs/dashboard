@@ -18,4 +18,15 @@ export default NextAuth(authConfig).auth;
 export const config = {
     // N'importe quelle chaine d'URL qui ne contient pas les sous-chaines définies dedans
     matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+
+//  Sans matcher, le middleware s'exécuterait sur absolument chaque requête, y compris les fichiers statiques — un gaspillage. Ce matcher est une expression régulière avec un negative lookahead (?!...) qui exclut certains chemims :
+
+// ?! => exclut certains chemins
+
+// api => Routes d'API — pas besoin de vérifier une session pour du JSON
+// _next/static => Fichiers statiques de Next.js (JS, CSS compilés)
+// _next/image => Images optimisées par Next.js
+// .*\.png$  => images PNG
+
+// Tout le reste (/dashboard, /login, /, etc.) passe par le middleware.
 }
