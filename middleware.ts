@@ -9,6 +9,12 @@
 // Aucune page n'est rendue tant que le middleware n'a pas rendu son verdict. 
 // C'est un "before hook" global du serveur, obtenu uniquement par le nom du fichier.
 
+// Next.js branche un hook qui s'exécute avant chaque requête, sur le runtime Edge.
+// Le runtime Edge : signifie que ce code s'exécute sur un serveur ultra-rapide et léger, proche de l'utilisateur, 
+// et non sur le serveur Node classique. 
+// Conséquence pratique : dans middleware.ts (et donc dans auth.config.ts qu'il importe), interdiction d'utiliser Prisma ou d'accéder à la base de données 
+// — d'où le providers: [] vide dans ta config.
+
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
 
