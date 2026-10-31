@@ -8,7 +8,7 @@ import { fetchInvoicesPages } from "@/app/lib/data";
 import Pagination from "@/app/ui/invoices/pagination";
 import { Metadata } from 'next';
 
-// Personnalisation du titre de la Métadata pour la page invoices
+// Personnalisation du titre de la Métadata
 export const metadata: Metadata = {
     title: "Factures"
 }

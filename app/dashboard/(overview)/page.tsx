@@ -12,6 +12,13 @@ import { Suspense } from 'react';
 import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/app/ui/skeletons';
 import CardWrapper from "@/app/ui/dashboard/cards"; 
 
+import { Metadata } from 'next';
+
+// Personnalisation du titre de la Métadata
+export const metadata: Metadata = {
+    title: "Admin"
+}
+
 export default async function Page() {
     
     // const revenue = await fetchRevenue(); // maintenant les données fetchRevenue ne sont plus récupérées dans le composant parent

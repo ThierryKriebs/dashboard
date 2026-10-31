@@ -1,5 +1,11 @@
 import { fetchFilteredCustomers } from '@/app/lib/data';
 import CustomersTable from '@/app/ui/customers/table';
+import { Metadata } from 'next';
+
+// Personnalisation du titre de la Métadata
+export const metadata: Metadata = {
+    title: "Customers"
+}
 
 export default async function Page({
     searchParams

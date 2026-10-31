@@ -1,5 +1,11 @@
 import AcmeLogo from '@/app/ui/acme-logo'
 import LoginForm from '@/app/ui/login-form'
+import { Metadata } from 'next';
+
+// Personnalisation du titre de la Métadata pour la page invoices
+export const metadata: Metadata = {
+    title: "Connexion"
+}
 
 export default function LoginPage() {
     return (
