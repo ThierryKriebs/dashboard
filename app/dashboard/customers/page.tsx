@@ -2,10 +2,11 @@ import { fetchFilteredCustomers } from '@/app/lib/data';
 import CustomersTable from '@/app/ui/customers/table';
 
 export default async function Page({
-    searchParams,
+    searchParams
 }: {
     searchParams?: {            //Cette page peut (à cause du champ recherche) être appelée avec des paramètres d'url
         query?: string;
+        page?: string;
     }
 }) {
 

@@ -206,7 +206,7 @@ export async function fetchInvoiceById(id: string) {
 export async function fetchFilteredCustomers(query: string) {
     noStore() //Passe au rendu dynamique
     try {
-        const allFilteredCustomers = await sql<CustomersTableType>`
+        const data = await sql<CustomersTableType>`
         SELECT
             customers.id,
             customers.name,
@@ -224,17 +224,17 @@ export async function fetchFilteredCustomers(query: string) {
             ORDER BY customers.name ASC
         `;
 
-        const allFilteredCustomersFormated = allFilteredCustomers.rows.map((oneCustomer) => ({
-            ...oneCustomer,
-            total_pending: formatCurrency(oneCustomer.total_pending),
-            total_paid: formatCurrency(oneCustomer.total_paid),
+        const customers = data.rows.map((customer) => ({
+            ...customer,
+            total_pending: formatCurrency(customer.total_pending),
+            total_paid: formatCurrency(customer.total_paid),
         }));
 
-        return allFilteredCustomersFormated;
+        return customers;
 
     } catch (error) {
         console.error('Database Error', error);
-        throw new Error('Echec lors de la récupération du client');
+        throw new Error('Echec lors de la récupération des clients');
     }
 
 }
