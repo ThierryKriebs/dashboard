@@ -1,6 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils'; // permet le formatage en dollar américaine des montants en centimes
-import { Revenue, LatestInvoiceRaw, InvoicesTable, CustomerField, InvoiceForm } from './definitions';
+import { Revenue, LatestInvoiceRaw, InvoicesTable, CustomerField, InvoiceForm, FormattedCustomersTable, CustomersTableType } from './definitions';
 
 import { unstable_noStore as noStore } from 'next/cache'; // Pour faire du rendu dynamique de manière granuaire (composant par composant)
 
@@ -200,4 +200,41 @@ export async function fetchInvoiceById(id: string) {
         console.error('Database Error', error);
         throw new Error('Echec lors de la récupération de la facture');
     }
+}
+
+
+export async function fetchFilteredCustomers(query: string) {
+    noStore() //Passe au rendu dynamique
+    try {
+        const allFilteredCustomers = await sql<CustomersTableType>`
+        SELECT
+            customers.id,
+            customers.name,
+            customers.email,
+            customers.image_url,
+            COUNT(invoices.id) AS total_invoices,
+            SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
+            SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
+            FROM customers
+            LEFT JOIN invoices ON customers.id = invoices.customer_id
+            WHERE
+            customers.name ILIKE ${`%${query}%`} OR
+            customers.email ILIKE ${`%${query}%`}
+            GROUP BY customers.id, customers.name, customers.email, customers.image_url
+            ORDER BY customers.name ASC
+        `;
+
+        const allFilteredCustomersFormated = allFilteredCustomers.rows.map((oneCustomer) => ({
+            ...oneCustomer,
+            total_pending: formatCurrency(oneCustomer.total_pending),
+            total_paid: formatCurrency(oneCustomer.total_paid),
+        }));
+
+        return allFilteredCustomersFormated;
+
+    } catch (error) {
+        console.error('Database Error', error);
+        throw new Error('Echec lors de la récupération du client');
+    }
+
 }

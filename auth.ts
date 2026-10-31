@@ -18,6 +18,8 @@ async function getUser(email: string): Promise<User | undefined> {
 
 }
 
+// NextAuth(config) donne 3 outils tout faits — auth (lire la session, utilisé par le middleware), 
+// signIn (se connecter), signOut (se déconnecter) On n'a plus qu'à les utiliser quand on en a besoin!
 export const { auth, signIn, signOut } = NextAuth({
     ...authConfig,
     providers: [Credentials({

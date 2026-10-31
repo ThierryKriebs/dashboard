@@ -14,9 +14,9 @@ export const authConfig = {
 
             // Si on est sur dashboard et qu'on est connecté, => authorise l'accès
             if (isOnDashboard) {
-                if (isLoggedIn) return true;
+                if (isLoggedIn) return true; //true provoque l'affichage de la page demandée
                 
-                // Pas connecté => refuse l'accès
+                // Pas connecté => refuse l'accès + redirige sur la route cablée pour effectuer le signIn (/login => voir plus haut)
                 return false;
                 
             // Si la personne est bien authentifié, => on redirige vers le dashboard
