@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+
 import { inter } from '@/app/ui/fonts';
+import type { Metadata } from "next";
 import "./globals.css";
 
 

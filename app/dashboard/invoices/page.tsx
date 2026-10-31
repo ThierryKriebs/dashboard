@@ -6,7 +6,12 @@ import { Suspense } from "react";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import { fetchInvoicesPages } from "@/app/lib/data";
 import Pagination from "@/app/ui/invoices/pagination";
+import { Metadata } from 'next';
 
+// Personnalisation du titre de la Métadata pour la page invoices
+export const metadata: Metadata = {
+    title: "Factures"
+}
 
 export default async function Page({
     searchParams,
