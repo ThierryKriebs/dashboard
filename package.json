@@ -31,7 +31,6 @@
     "@types/bcrypt": "^5.0.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@vercel/style-guide": "^5.0.1",
     "dotenv": "^16.3.1",
     "eslint": "9.39.5",
     "eslint-config-next": "15.5.28",
