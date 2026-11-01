@@ -138,7 +138,7 @@ export async function deleteInvoice(id:string) {
         revalidatePath('/dashboard/invoices');
 
     } catch (error) {
-        return { message: 'Erreur base de données: échec lors de la suppression de la facture.'}
+        throw new Error('Erreur base de données: échec lors de la suppression de la facture.')
     }
 }
 
