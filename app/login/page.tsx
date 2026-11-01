@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import AcmeLogo from '@/app/ui/acme-logo'
 import LoginForm from '@/app/ui/login-form'
 import { Metadata } from 'next';
@@ -17,7 +19,9 @@ export default function LoginPage() {
                     </div>
                 </div>
                 {/* Login Form */}
-                <LoginForm />
+                <Suspense>
+                    <LoginForm />
+                </Suspense>
             </div>
         </main>
     )
