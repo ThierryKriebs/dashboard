@@ -9,18 +9,19 @@ export const metadata: Metadata = {
     title: "modification de factures"
 }
 
-export default async function page( { params } : { params: {id: string }}) {
+export default async function page(props: { params: Promise<{id: string }>}) {
+  const params = await props.params;
   const id = params.id;
 
   const [invoice, customers] = await Promise.all([
     fetchInvoiceById(id),
     fetchCustomers()
   ])
-  
+
   if (!invoice) {
     notFound();
   }
-  
+
   return (
     <main>
       <Breadcrumbs 

@@ -13,14 +13,15 @@ export const metadata: Metadata = {
     title: "Factures"
 }
 
-export default async function Page({
-    searchParams,
-}: {
-    searchParams?: {            //Cette page peut (à cause du champ recherche) être appelée avec des paramètres d'url
-        query?: string;
-        page?: string;
+export default async function Page(
+    props: {
+        searchParams?: Promise<{            //Cette page peut (à cause du champ recherche) être appelée avec des paramètres d'url
+            query?: string;
+            page?: string;
+        }>
     }
-}) {
+) {
+    const searchParams = await props.searchParams;
 
     const query = searchParams?.query || '';
     const currentPage = Number(searchParams?.page) || 1;

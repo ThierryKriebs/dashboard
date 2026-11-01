@@ -7,21 +7,22 @@ export const metadata: Metadata = {
     title: "Customers"
 }
 
-export default async function Page({
-    searchParams
-}: {
-    searchParams?: {            //Cette page peut (à cause du champ recherche) être appelée avec des paramètres d'url
-        query?: string;
-        page?: string;
+export default async function Page(
+    props: {
+        searchParams?: Promise<{            //Cette page peut (à cause du champ recherche) être appelée avec des paramètres d'url
+            query?: string;
+            page?: string;
+        }>
     }
-}) {
+) {
+    const searchParams = await props.searchParams;
 
-  const query = searchParams?.query || '';  
-  const customers = await fetchFilteredCustomers(query);
+    const query = searchParams?.query || '';
+    const customers = await fetchFilteredCustomers(query);
 
-  return (
-    <main>
-      <CustomersTable customers={customers} />
-    </main>
-  );
+    return (
+      <main>
+        <CustomersTable customers={customers} />
+      </main>
+    );
 }

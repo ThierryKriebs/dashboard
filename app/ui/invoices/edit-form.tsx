@@ -9,8 +9,8 @@ import {
 import Link from "next/link";
 import { Button } from "@/app/ui/button";
 import { CustomerField, InvoiceForm } from "@/app/lib/definitions";
-import { updateInvoice } from '@/app/lib/actions';
-import { useFormState } from 'react-dom';
+import { updateInvoice, State } from '@/app/lib/actions';
+import { useActionState } from 'react';
 
 
 export default function Form({ 
@@ -21,12 +21,12 @@ export default function Form({
     invoice: InvoiceForm
 }) {
 
-    const initialState = {
+    const initialState: State = {
         message: null,
         errors: {}
     }
     const updateInvoiceWithId = updateInvoice.bind(null, invoice.id)
-    const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
+    const [state, dispatch] = useActionState(updateInvoiceWithId, initialState);
 
 
     return (

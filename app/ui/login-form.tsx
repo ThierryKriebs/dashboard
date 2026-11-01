@@ -8,15 +8,22 @@ import {
  
  import { ArrowRightIcon } from '@heroicons/react/20/solid';
  import {Button } from './button';
- import { useFormState, useFormStatus } from 'react-dom'; // useFormState sert à récupérer le résultat d'une Server Action déclenchée par un formulaire
+ import { useFormStatus } from 'react-dom'; // useFormState sert à récupérer le résultat d'une Server Action déclenchée par un formulaire
  import { authenticate } from '@/app/lib/actions';
+import { useActionState } from 'react';
+import { useSearchParams } from 'next/navigation';
+
 
 export default function LoginForm() {
 
-    const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+    const searchParams =useSearchParams();
+
+    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
+
+    const [errorMessage, formAction, isPending] = useActionState(authenticate, undefined); // useActionState permet de récupérer le résultat d'une Server Action déclenchée par un formulaire, ainsi que l'état du formulaire (isPending)
 
     return (
-        <form className="space-y-3" action ={dispatch}>
+        <form className="space-y-3" action ={formAction}>
             <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
                 <h1 className={`${lusitana.className} mb-3 text-2xl`}>Connexion </h1>
                 <div className="w-full">
@@ -58,7 +65,11 @@ export default function LoginForm() {
                         </div>
                     </div>
                 </div>
-                <LoginButton />
+                
+                <input type="hidden" name="redirectTo" value={callbackUrl} />
+                <Button className='mt-4 w-full' aria-disabled={isPending}>
+                    Connexion < ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
+                </Button>
 
                 <div
                     className='flex h-8 items-end space-x-1'
@@ -79,11 +90,11 @@ export default function LoginForm() {
     )
 }
 
-function LoginButton() {
-    const { pending } = useFormStatus(); // useFormStatus permet de savoir si le form est en cours d'envoi
-    return(
-        <Button className='mt-4 w-full' aria-disabled={pending}>
-           Se connecter < ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
-        </Button>
-    )
-}
+// function LoginButton() {
+//     const { pending } = useFormStatus(); // useFormStatus permet de savoir si le form est en cours d'envoi => Plu besoin avec useActionState de Next15 et son isPending
+//     return(
+//         <Button className='mt-4 w-full' aria-disabled={pending}>
+//            Se connecter < ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
+//         </Button>
+//     )
+// }
